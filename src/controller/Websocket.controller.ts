@@ -6,7 +6,6 @@ import {
 	EventSubChannelSubscriptionEvent,
 } from "@twurple/eventsub-base";
 import FollowersModel from "../model/Followers.model";
-import { Db } from "mongodb";
 import { Broadcaster } from "../model/Broadcaster.model";
 
 export class WebSocketController {

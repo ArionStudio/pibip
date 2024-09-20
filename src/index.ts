@@ -1,10 +1,11 @@
 import * as dotenv from "dotenv";
 import { ApiClient } from "@twurple/api";
-import { exchangeCode } from "@twurple/auth";
+import { exchangeCode, RefreshingAuthProvider } from "@twurple/auth";
 import { MongoModel } from "./model/Mongo.model";
 import { Broadcaster } from "./model/Broadcaster.model";
-import { WebSocketController } from "./controller/websocket.controller";
 import BroadcasterController from "./controller/Broadcaster.controller";
+import { Db } from "mongodb";
+import { EventSubWsListener } from "@twurple/eventsub-ws";
 
 dotenv.config();
 
@@ -16,28 +17,7 @@ async function App() {
 	const db = MongoModel.getInstance();
 	const conection = await db.connect();
 
-	const {authProvider, apiClient} = await BroadcasterController.initAll(
-		conection,
-		clientId,
-		clientSecret
-	);
-
-	
-
-	
+	const { authProvider, apiClient, listener } =
+		await BroadcasterController.initAll(conection, clientId, clientSecret);
 }
 App();
-
-async function GetToken(broadcasterId: string) {
-	const redirectUri = "http://localhost"; // must match one of the URLs in the dev console exactly
-	const tokenData = await exchangeCode(
-		clientId,
-		clientSecret,
-		code,
-		redirectUri
-	);
-
-	AuthController.init({ ...tokenData, userId: broadcasterId });
-}
-
-// GetToken();

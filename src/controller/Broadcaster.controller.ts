@@ -1,10 +1,14 @@
 import { Db } from "mongodb";
 import BroadcasterModel, { Broadcaster } from "../model/Broadcaster.model";
-import { AccessToken, RefreshingAuthProvider } from "@twurple/auth";
-import { WebSocketController } from "./websocket.controller";
+import {
+	AccessToken,
+	exchangeCode,
+	RefreshingAuthProvider,
+} from "@twurple/auth";
 import FollowersModel from "../model/Followers.model";
 import { ApiClient } from "@twurple/api";
 import { EventSubWsListener } from "@twurple/eventsub-ws";
+import { WebSocketController } from "./Websocket.controller";
 
 const scopes: string[] = [
 	"moderator:read:followers",
@@ -73,8 +77,19 @@ export default class BroadcasterController {
 		listener: EventSubWsListener,
 		apiClient: ApiClient,
 		authProvider: RefreshingAuthProvider,
-		broadcaster: Broadcaster
+		broadcaster: Broadcaster,
+		clientId: string,
+		clientSecret: string,
+		code: string
 	) {
+		const redirectUri = "http://localhost"; 
+		const tokenData = await exchangeCode(
+			clientId,
+			clientSecret,
+			code,
+			redirectUri
+		);
+
 		const broadcasterDb = new BroadcasterModel(db);
 		broadcasterDb.add(broadcaster);
 
