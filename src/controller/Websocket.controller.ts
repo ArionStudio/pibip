@@ -9,6 +9,7 @@ import FollowersModel from "../model/Followers.model";
 import { Broadcaster } from "../model/Broadcaster.model";
 
 export class WebSocketController {
+	//TODO: MAKE LISTENER ON ONLY IF USER NEED IT (USER CONFIG)
 	static init(
 		listener: EventSubWsListener,
 		apiClient: ApiClient,
